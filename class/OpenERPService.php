@@ -13,17 +13,17 @@ class OpenERPService {
         // override from environment variable
         $vars = get_class_vars(__CLASS__);
         print_r($vars);
-        foreach ($vars as $var) {
+        foreach ($vars as $key => $var) {
 
-            $this->$var = $this->getEnv($var);
+            $this->$key = $this->getEnv($key);
         }
     }
 
-    private function getEnv($variable) {
-        $val = getenv($variable);
-        echo "processing $variable\n";
-        $ret = ($val != '') ? $val : $this->$variable;
-        if ($val == 'erpDebug') {
+    private function getEnv($var) {
+        $value = getenv($var);
+        echo "processing $var\n";
+        $ret = ($value != '') ? $value : $this->$var;
+        if ($value == 'erpDebug') {
             $ret = (int) $ret;
         }
         return $ret;
