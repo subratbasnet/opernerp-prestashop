@@ -21,6 +21,7 @@ class OpenERPService {
 
     private function getEnv($variable) {
         $val = getenv($variable);
+        echo "processing $variable\n";
         $ret = ($val != '') ? $val : $this->$variable;
         if ($val == 'erpDebug') {
             $ret = (int) $ret;
