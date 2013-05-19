@@ -12,7 +12,6 @@ class OpenERPService {
 
         // override from environment variable
         $vars = get_class_vars(__CLASS__);
-        print_r($vars);
         foreach ($vars as $key => $var) {
 
             $this->$key = $this->getEnv($key);
