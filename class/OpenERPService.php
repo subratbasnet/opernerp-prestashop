@@ -1,10 +1,12 @@
 <?php
 
-class OpenERPService {
+require_once __DIR__ . '/OpenERP.php';
+
+class OpenERPService extends OpenERP {
 
     public $erpDebug = false;
     private $erpDb = 'my_erp_db';
-    private $erpUserId = 1; // 1 is for admin, usually
+    private $erpUser = 1; // 1 is for admin, usually
     private $erpPwd = 'mypassword';
     private $erpEndPoint = 'http://example.com:8069/xmlrpc/object';
 
@@ -15,6 +17,9 @@ class OpenERPService {
         foreach ($vars as $key => $var) {
             $this->$key = $this->getEnv($key);
         }
+        $this->erpUser = 'subrat.basnet';
+        parent::__construct($this->erpEndPoint, $this->erpDb);
+        $this->login($this->erpUser, $this->erpPwd);
     }
 
     private function getEnv($key) {
@@ -58,15 +63,28 @@ class OpenERPService {
     }
 
     public function getErpProductIds() {
-        $args = array(array("available_in_pos", "=", true));
-        $model = 'product.product';
-        return $this->xmlRpcCall('execute', array($this->erpDb, $this->erpUserId, $this->erpPwd, $model, 'search', $args));
+        $arr = array();
+        $res = $this->read(array(
+                    'model' => 'product.product',
+                    'fields' => array('id'),
+                    'domain' => array(array("pos_categ_id", "<>", false))
+                ));
+        if (is_array($res['records'])) {
+            foreach ($res['records'] as $record) {
+                $arr[] = $record['id'];
+            }
+        }
+        return $arr;
     }
 
     public function getErpProductInfo($id) {
-        $args = array('id', 'name', 'lst_price', 'code', 'qty_available', 'price_extra', 'image', 'pos_categ_id', 'active');
-        $model = 'product.product';
-        $arr = $this->xmlRpcCall('execute', array($this->erpDb, $this->erpUserId, $this->erpPwd, $model, 'read', $id, $args));
+        $arr = array();
+        $res = $this->read(array(
+                    'model' => 'product.product',
+                    'fields' => array('id', 'name', 'lst_price', 'code', 'qty_available', 'price_extra', 'pos_categ_id', 'active', 'image'),
+                    'domain' => array(array("id", "=", $id))
+                ));
+        $arr = $res['records'][0];
         if (is_array($arr) && !empty($arr)) {
             $arr['description'] = $this->getErpProductDesc($id);
             $catArr = $arr['pos_categ_id'];
@@ -82,10 +100,18 @@ class OpenERPService {
     }
 
     public function getErpProductDesc($id) {
-        $args = array('description');
-        $model = 'product.template';
-        $desc = ($this->xmlRpcCall('execute', array($this->erpDb, $this->erpUserId, $this->erpPwd, $model, 'read', $id, $args)));
-        return trim($desc['description']);
+        $arr = array();
+        $res = $this->read(array(
+                    'model' => 'product.template',
+                    'fields' => array('description'),
+                    'domain' => array(array("id", "=", $id))
+                ));
+        $arr = $res['records'][0];
+        if (is_array($arr) && !empty($arr)) {
+            return trim($arr['description']);
+        }
+
+        return '';
     }
 
     private function toUtf8($in) {
