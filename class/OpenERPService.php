@@ -5,7 +5,7 @@ class OpenERPService {
     public $erpDebug = false;
     private $erpDb = 'my_erp_db';
     private $erpUserId = 1; // 1 is for admin, usually
-    private $erPwd = 'mypassword';
+    private $erpPwd = 'mypassword';
     private $erpEndPoint = 'http://example.com:8069/xmlrpc/object';
 
     public function __construct() {
@@ -13,14 +13,13 @@ class OpenERPService {
         // override from environment variable
         $vars = get_class_vars(__CLASS__);
         foreach ($vars as $key => $var) {
-
             $this->$key = $this->getEnv($key);
         }
     }
 
-    private function getEnv($var) {
-        $value = getenv($var);
-        $ret = ($value != '') ? $value : $this->$var;
+    private function getEnv($key) {
+        $value = getenv($key);
+        $ret = ($value != '') ? $value : $this->$key;
         if ($value == 'erpDebug') {
             $ret = (int) $ret;
         }
