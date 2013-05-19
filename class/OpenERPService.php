@@ -28,6 +28,7 @@ class OpenERPService {
 
     private function xmlRpcCall($method, $params, $endPointUrl = null) {
         if ($this->erpDebug) {
+            echo "In params to $this->erpEndPoint:\n";
             print_r($params);
         }
 
@@ -44,6 +45,7 @@ class OpenERPService {
                         )));
         $file = file_get_contents($endPointUrl, false, $context);
         if ($this->erpDebug) {
+            echo "Out response:\n";
             echo $file;
         }
         $response = xmlrpc_decode($file);
