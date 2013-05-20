@@ -81,7 +81,7 @@ class OpenERPService extends OpenERP {
         $arr = array();
         $res = $this->read(array(
                     'model' => 'product.product',
-                    'fields' => array('id', 'name', 'lst_price', 'code', 'qty_available', 'price_extra', 'pos_categ_id', 'active', 'image'),
+                    'fields' => array('id', 'name', 'lst_price', 'code', 'qty_available', 'price_extra', 'pos_categ_id', 'active', 'image','state'),
                     'domain' => array(array("id", "=", $id))
                 ));
         $arr = $res['records'][0];

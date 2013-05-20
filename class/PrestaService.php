@@ -27,7 +27,7 @@ class PrestaService extends PrestaShopWebservice {
     private $curImageId = 0;
 
     public function __construct($debug = false) {
-        
+
         // give environment variables a higher priority
         $this->prestaUrl = $this->getEnv('prestaUrl');
         $this->prestaApiKey = $this->getEnv('prestaApiKey');
@@ -178,6 +178,13 @@ class PrestaService extends PrestaShopWebservice {
         $metaKeywords = empty($metaKeywords) ? strtolower($productName) : $metaKeywords;
         $linkRewrite = $this->getRewrite($productName);
         $active = (int) $params['active'];
+
+        if ($active) {
+            if ($params['state'] == 'obsolete') {
+                $active = 0;
+            }
+        }
+
         $remoteProductId = $params['id'];
         $productRef = $params['code'];
 
@@ -193,7 +200,7 @@ class PrestaService extends PrestaShopWebservice {
         //unset($resources->date_add);
         //unset($resources->date_upd);
         //unset($resources->associations);
-        unset($resources->images);
+        //unset($resources->images);
         $resources->date_upd = $resources->date_add = date("Y-m-d H:i:s");
         //$resources->id_shop_default = 1;
         $resources->reference->addCData($productRef);
@@ -212,11 +219,14 @@ class PrestaService extends PrestaShopWebservice {
         $resources->indexed = 1;
         $resources->minimal_quantity = 1;
         $resources->active = $active;
-
         $productId = $this->productExists($this->translateMapping($remoteCategoryId, 'openerp_productId', 'presta_productId'));
 
         if (!$productId) {
             $productId = $this->getProductId($productName);
+        }
+
+        if ($this->curImageId) {
+            $resources->id_default_image = $this->curImageId;
         }
 
         try {
@@ -238,6 +248,7 @@ class PrestaService extends PrestaShopWebservice {
                 $productId = (int) $res->id;
             }
 
+            $this->mappings[$this->curMapIndex]['presta_imageId'] = $this->curImageId;
             $this->mappings[$this->curMapIndex]['openerp_productId'] = $remoteProductId;
             $this->mappings[$this->curMapIndex]['presta_productId'] = $productId;
 
@@ -357,7 +368,7 @@ class PrestaService extends PrestaShopWebservice {
 
     private function getRewrite($text, $limit = 75) {
         // replace non letter or digits by -
-        $text = preg_replace('~[^\\pL\d]+~u', '-', $text);
+        $text = preg_replace('/~[^\\pL\d]+~u/i', '-', $text);
 
         // trim
         $text = trim($text, '-');

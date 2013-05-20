@@ -8,7 +8,13 @@ require_once __DIR__ . '/class/OpenERPService.php';
 require_once __DIR__ . '/class/PrestaService.php';
 
 $erp = new OpenERPService();
-$ps = new PrestaService($erp->erpDebug);
+$ps = new PrestaService(false);
+
+//$productInfo = $erp->getErpProductInfo(73);
+////$productInfo['image'] = '';
+//print_r($productInfo);
+//$ps->sync($productInfo);
+//exit;
 $products = $erp->getErpProductIds();
 foreach ($products as $productId) {
     $productInfo = $erp->getErpProductInfo($productId);
