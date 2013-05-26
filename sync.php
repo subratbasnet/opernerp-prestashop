@@ -9,6 +9,7 @@ require_once __DIR__ . '/class/PrestaService.php';
 
 $erp = new OpenERPService();
 $ps = new PrestaService(false);
+$ps->setHomeCategories(array('live fish'));
 //$erp->getErpProductIds();
 //exit;
 //$productInfo = $erp->getErpProductInfo(73);

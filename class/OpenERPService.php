@@ -5,7 +5,7 @@ require_once __DIR__ . '/OpenERP.php';
 class OpenERPService extends OpenERP {
 
     public $erpDebug = false;
-    private $erpDb = 'my_erp_db';
+    private $erpDatabase = 'my_erp_db';
     private $erpUser = 1; // 1 is for admin, usually
     private $erpPwd = 'mypassword';
     private $erpEndPoint = 'http://example.com:8069/xmlrpc/object';
@@ -18,7 +18,7 @@ class OpenERPService extends OpenERP {
             $this->$key = $this->getEnv($key);
         }
         $this->erpUser = 'subrat.basnet';
-        parent::__construct($this->erpEndPoint, $this->erpDb);
+        parent::__construct($this->erpEndPoint, $this->erpDatabase);
         $this->login($this->erpUser, $this->erpPwd);
     }
 

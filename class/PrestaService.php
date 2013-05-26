@@ -25,6 +25,7 @@ class PrestaService extends PrestaShopWebservice {
     private $homeCategoryId = 2;
     private $logs = array();
     private $curImageId = 0;
+    private $homeCategories = array();
 
     public function __construct($debug = false) {
 
@@ -113,6 +114,10 @@ class PrestaService extends PrestaShopWebservice {
         }
 
         return 0;
+    }
+
+    public function setHomeCategories(array $cats) {
+        $this->homeCategories = $cats;
     }
 
     private function createCategory($categoryName, $categoryDesc, $remoteCategoryId, $active = 1, $metaTitle = '', $metaDesc = '', $metaKeywords = '') {
@@ -227,8 +232,13 @@ class PrestaService extends PrestaShopWebservice {
         $resources->show_price = 1;
         $resources->price->addCData($params['lst_price']);
         $resources->available_for_order = $active;
-        $resources->associations->categories->category[0]->id = $this->homeCategoryId;
-        $resources->associations->categories->category[1]->id = $params['p_cat_id'];
+
+        if (in_array(strtolower($params['cat_name']), $this->homeCategories)) {
+            $resources->associations->categories->category[0]->id = $this->homeCategoryId;
+            $resources->associations->categories->category[1]->id = $params['p_cat_id'];
+        } else {
+            $resources->associations->categories->category[0]->id = $params['p_cat_id'];
+        }
         $resources->indexed = 1;
         $resources->minimal_quantity = 1;
         $resources->active = $active;
