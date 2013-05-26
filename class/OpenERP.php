@@ -80,6 +80,7 @@ class OpenERP {
 
     function json($url, $params) {
         $req = $this->get_connection($url)->sendRequest('call', $params);
+        print_r($req);
         if ($req->isError()) {
             throw new OpenErpException('Error ' . $req->error . ': ' . $req->errorMessage);
         }
