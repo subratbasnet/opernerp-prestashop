@@ -77,6 +77,8 @@ class PrestaService extends PrestaShopWebservice {
         $xml = $this->get($opt);
         $products = $xml->xpath('/prestashop/products/product');
 
+        print_r($products);
+
         foreach ($products as $product) {
             $this->curImageId = (int) $product->id_default_image;
             return (int) $product->id;
