@@ -9,14 +9,14 @@ require_once __DIR__ . '/class/PrestaService.php';
 
 $erp = new OpenERPService();
 $ps = new PrestaService(false);
-$erp->getErpProductIds();
-exit;
-$productInfo = $erp->getErpProductInfo(73);
-//$productInfo['image'] = '';
-print_r($productInfo);
-exit;
-$ps->sync($productInfo);
-exit;
+//$erp->getErpProductIds();
+//exit;
+//$productInfo = $erp->getErpProductInfo(73);
+////$productInfo['image'] = '';
+//print_r($productInfo);
+//exit;
+//$ps->sync($productInfo);
+//exit;
 $products = $erp->getErpProductIds();
 foreach ($products as $productId) {
     $productInfo = $erp->getErpProductInfo($productId);
