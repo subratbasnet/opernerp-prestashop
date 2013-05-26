@@ -67,7 +67,7 @@ class OpenERPService extends OpenERP {
         $res = $this->read(array(
                     'model' => 'product.product',
                     'fields' => array('id'),
-                    'domain' => array(array("pos_categ_id", "<>", false))
+                    'domain' => array(array("pos_categ_id", "<>", false),array("available_in_pos", "=", true))
                 ));
         if (is_array($res['records'])) {
             foreach ($res['records'] as $record) {

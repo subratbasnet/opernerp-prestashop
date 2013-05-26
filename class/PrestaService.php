@@ -71,6 +71,19 @@ class PrestaService extends PrestaShopWebservice {
         return 0;
     }
 
+    private function getProductIdByCode($code) {
+        $opt = array('resource' => 'products', 'display' => 'full', 'filter[reference]' => $productName);
+        $xml = $this->get($opt);
+        $products = $xml->xpath('/prestashop/products/product');
+
+        foreach ($products as $product) {
+            $this->curImageId = (int) $product->id_default_image;
+            return (int) $product->id;
+        }
+
+        return 0;
+    }
+
     private function getProductId($productName) {
         $opt = array('resource' => 'products', 'display' => 'full', 'filter[name]' => $productName);
         $xml = $this->get($opt);
@@ -221,8 +234,13 @@ class PrestaService extends PrestaShopWebservice {
         $resources->active = $active;
         $productId = $this->productExists($this->translateMapping($remoteCategoryId, 'openerp_productId', 'presta_productId'));
 
+
         if (!$productId) {
-            $productId = $this->getProductId($productName);
+            $productId = $this->getProductIdByCode($productRef);
+
+            if (!$productId) {
+                $productId = $this->getProductId($productName);
+            }
         }
 
         if ($this->curImageId) {
