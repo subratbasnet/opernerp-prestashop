@@ -1,3 +1,5 @@
 tmp/
 nbproject/
 .DS_Store
+.htaccess
+.htpasswd
