@@ -10,14 +10,13 @@ require_once __DIR__ . '/class/OpenERPService.php';
 $erp = new OpenERPService();
 //$ps = new PrestaService(false);
 //$ps->setHomeCategories(array('live fish'));
-
+$i = 0;
 $fp = fopen('../public_html/erp_export.csv', 'w');
 $products = $erp->getErpProductIds();
-foreach ($products as $i => $productId) {
+foreach ($products as $productId) {
 
     $productInfo = $erp->getErpProductInfo($productId);
     if ($productInfo['cat_name'] == 'Live Fish') {
-        $i = 0;
 
         $productInfo['code'] = str_replace('_', '-', strtoupper($productInfo['code']));
         $productInfo['lst_price'] = ($productInfo['lst_price']);
@@ -44,6 +43,7 @@ foreach ($products as $i => $productId) {
         }
 
         unset($productInfo['image']);
+        $productInfo['low_inventory'] = 5;
 
         if ($i == 0) {
             $keys = array_keys($productInfo);
@@ -53,7 +53,7 @@ foreach ($products as $i => $productId) {
         print_r($productInfo);
 
         fputcsv($fp, $productInfo);
-        break;
+        $i++;
     }
 }
 fclose($fp);
