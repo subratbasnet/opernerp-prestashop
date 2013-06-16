@@ -16,7 +16,7 @@ $products = $erp->getErpProductIds();
 foreach ($products as $productId) {
 
     $productInfo = $erp->getErpProductInfo($productId);
-    if ($productInfo['cat_name'] == 'Live Fish') {
+    if ($productInfo['cat_name'] == 'Fish Food') {
 
         $productInfo['code'] = str_replace('_', '-', strtoupper($productInfo['code']));
         $productInfo['lst_price'] = ($productInfo['lst_price']);
