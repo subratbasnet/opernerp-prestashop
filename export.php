@@ -11,7 +11,7 @@ $erp = new OpenERPService();
 //$ps = new PrestaService(false);
 //$ps->setHomeCategories(array('live fish'));
 
-$fp = fopen('erp_export.csv', 'w');
+$fp = fopen('../public_html/erp_export.csv', 'w');
 $products = $erp->getErpProductIds();
 foreach ($products as $i => $productId) {
     $productInfo = $erp->getErpProductInfo($productId);
