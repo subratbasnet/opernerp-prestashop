@@ -15,8 +15,9 @@ $fp = fopen('../public_html/erp_export.csv', 'w');
 $products = $erp->getErpProductIds();
 foreach ($products as $i => $productId) {
 
+    $productInfo = $erp->getErpProductInfo($productId);
     if ($productInfo['cat_name'] == 'Live Fish') {
-        $productInfo = $erp->getErpProductInfo($productId);
+        
 
         $productInfo['code'] = str_replace('_', '-', strtoupper($productInfo['code']));
         $productInfo['lst_price'] = ($productInfo['lst_price']);
