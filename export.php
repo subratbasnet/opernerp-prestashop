@@ -36,17 +36,17 @@ foreach ($products as $i => $productId) {
         $productInfo['cost_price'] = round(($productInfo['lst_price'] - ($productInfo['lst_price'] * $percentage / 100)), 2);
     }
 
-    if ($i == 0) {
-        $keys = array_keys($productInfo);
-        unset($keys['image']);
-        fputcsv($fp, $keys);
-    }
-
     if ($productInfo['image'] && $productInfo['code']) {
         file_put_contents('images/' . $productInfo['code'] . '.jpg', base64_decode($productInfo['image']));
     }
 
     unset($productInfo['image']);
+
+    if ($i == 0) {
+        $keys = array_keys($productInfo);
+        fputcsv($fp, $keys);
+    }
+
     print_r($productInfo);
 
     fputcsv($fp, $productInfo);
