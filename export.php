@@ -17,7 +17,7 @@ foreach ($products as $i => $productId) {
     $productInfo = $erp->getErpProductInfo($productId);
 
     $productInfo['code'] = str_replace('_', '-', strtoupper($productInfo['code']));
-    $productInfo['lst_price'] = number_format($productInfo['lst_price']);
+    $productInfo['lst_price'] = ($productInfo['lst_price']);
 
     if ($productInfo['cat_name'] == 'Aquarium Accessories') {
         $percentage = 40;
@@ -33,7 +33,7 @@ foreach ($products as $i => $productId) {
     if ($percentage <= 1) {
         $productInfo['cost_price'] = $productInfo['lst_price'];
     } else {
-        $productInfo['cost_price'] = number_format(($productInfo['lst_price'] - ($productInfo['lst_price'] * $percentage / 100)), 2);
+        $productInfo['cost_price'] = round(($productInfo['lst_price'] - ($productInfo['lst_price'] * $percentage / 100)), 2);
     }
 
     if ($i == 0) {
