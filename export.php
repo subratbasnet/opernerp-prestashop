@@ -44,6 +44,7 @@ foreach ($products as $i => $productId) {
         file_put_contents('images/' . $productInfo['code'] . '.jpg', base64_decode($productInfo['image']));
     }
 
+    unset($productInfo['image']);
     print_r($productInfo);
 
     fputcsv($fp, $productInfo);
