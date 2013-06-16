@@ -37,6 +37,8 @@ foreach ($products as $i => $productId) {
     }
 
     if ($i == 0) {
+        $keys = array_keys($productInfo);
+        unset($keys['image']);
         fputcsv($fp, array_keys($productInfo));
     }
 
