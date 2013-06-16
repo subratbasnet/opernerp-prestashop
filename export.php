@@ -14,41 +14,45 @@ $erp = new OpenERPService();
 $fp = fopen('../public_html/erp_export.csv', 'w');
 $products = $erp->getErpProductIds();
 foreach ($products as $i => $productId) {
-    $productInfo = $erp->getErpProductInfo($productId);
 
-    $productInfo['code'] = str_replace('_', '-', strtoupper($productInfo['code']));
-    $productInfo['lst_price'] = ($productInfo['lst_price']);
+    if ($productInfo['cat_name'] == 'Live Fish') {
+        $productInfo = $erp->getErpProductInfo($productId);
 
-    if ($productInfo['cat_name'] == 'Aquarium Accessories') {
-        $percentage = 40;
-    } else
-    if ($productInfo['cat_name'] == 'Fish Food') {
-        $percentage = 40;
-    } else if ($productInfo['cat_name'] == 'Live Fish') {
-        $percentage = 70;
-    } else {
-        $percentage = 1;
+        $productInfo['code'] = str_replace('_', '-', strtoupper($productInfo['code']));
+        $productInfo['lst_price'] = ($productInfo['lst_price']);
+
+        if ($productInfo['cat_name'] == 'Aquarium Accessories') {
+            $percentage = 40;
+        } else
+        if ($productInfo['cat_name'] == 'Fish Food') {
+            $percentage = 40;
+        } else if ($productInfo['cat_name'] == 'Live Fish') {
+            $percentage = 70;
+        } else {
+            $percentage = 1;
+        }
+
+        if ($percentage <= 1) {
+            $productInfo['cost_price'] = $productInfo['lst_price'];
+        } else {
+            $productInfo['cost_price'] = round(($productInfo['lst_price'] - ($productInfo['lst_price'] * $percentage / 100)), 2);
+        }
+
+        if ($productInfo['image'] && $productInfo['code']) {
+            file_put_contents('images/' . $productInfo['code'] . '.jpg', base64_decode($productInfo['image']));
+        }
+
+        unset($productInfo['image']);
+
+        if ($i == 0) {
+            $keys = array_keys($productInfo);
+            fputcsv($fp, $keys);
+        }
+
+        print_r($productInfo);
+
+        fputcsv($fp, $productInfo);
+        break;
     }
-
-    if ($percentage <= 1) {
-        $productInfo['cost_price'] = $productInfo['lst_price'];
-    } else {
-        $productInfo['cost_price'] = round(($productInfo['lst_price'] - ($productInfo['lst_price'] * $percentage / 100)), 2);
-    }
-
-    if ($productInfo['image'] && $productInfo['code']) {
-        file_put_contents('images/' . $productInfo['code'] . '.jpg', base64_decode($productInfo['image']));
-    }
-
-    unset($productInfo['image']);
-
-    if ($i == 0) {
-        $keys = array_keys($productInfo);
-        fputcsv($fp, $keys);
-    }
-
-    print_r($productInfo);
-
-    fputcsv($fp, $productInfo);
 }
 fclose($fp);
